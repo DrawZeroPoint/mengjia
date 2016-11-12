@@ -2,20 +2,20 @@
 #include "std_msgs/String.h"
 #include <sstream>
 
-#include "asoundlib.h"
 #include<iostream>
-#include "math.h"
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
-#include "errno.h"
-#include "unistd.h"
-#include "json.h"
+#include "include/asoundlib.h"
+#include "include/math.h"
+#include "include/stdlib.h"
+#include "include/stdio.h"
+#include "include/string.h"
+#include "include/errno.h"
+#include "include/unistd.h"
+#include "include/json.h"
 
-#include "qisr.h"
-#include "msp_cmn.h"
-#include "msp_errors.h"
-#include <drv_msgs/target_info.h>
+#include "include/qisr.h"
+#include "include/msp_cmn.h"
+#include "include/msp_errors.h"
+//#include <drv_msgs/target_info.h>
 
 #define SAMPLE_RATE_16K     (16000)
 #define MAX_GRAMMARID_LEN   (32)
@@ -100,8 +100,8 @@ void snd_pcm_open_setparams(snd_pcm_stream_t mode)
         fprintf(stderr,"unable to set hw paramwters:%s\n",snd_strerror(rc));
         exit(1);
     }
-    printf("参数设置成功！\n");
-    printf("=============================================================\n");
+    std::cout<<"参数设置成功！"<<std::endl;
+    std::cout<<"============================================================="<<std::endl;
 }
 
 
@@ -125,8 +125,8 @@ void snd_pcm_capture()
     FILE *fp = fopen("/home/liuxin/catkin_ws/devel/lib/mengjia_command/liuxin.wav","w");
     fwrite(&default_wav_hdr,sizeof(default_wav_hdr),1,fp);
     long o = default_wav_hdr.data_size;
-    printf("请叙述你的问题：\n");
-    printf("=============================================================\n");
+    std::cout<<"请叙述你的问题："<<std::endl;
+    std::cout<<"============================================================="<<std::endl;
     double amp1 = 4;
     double amp2 = 2;
     int setsilence = 400;
@@ -211,8 +211,8 @@ void snd_pcm_capture()
             goto ppp;
         }
     }
-ppp:	printf("声音抓取成功！\n");
-    printf("=============================================================\n");
+ppp:	std::cout<<"声音抓取成功！"<<std::endl;
+    std::cout<<"============================================================="<<std::endl;
     default_wav_hdr.size_8+=default_wav_hdr.data_size+(sizeof(default_wav_hdr)-8);
     fseek(fp,4,0);
     fwrite(&default_wav_hdr.size_8,sizeof(default_wav_hdr.size_8),1,fp);
@@ -241,12 +241,12 @@ int build_grm_cb(int ecode, const char *info, void *udata)
     }
 
     if (MSP_SUCCESS == ecode && NULL != info) {
-        printf("构建语法成功！ 语法ID:%s\n", info);
+        std::cout<<"构建语法成功！ 语法ID:"<<info<<std::endl;
         if (NULL != grm_data)
             snprintf(grm_data->grammar_id, MAX_GRAMMARID_LEN - 1, info);
     }
     else
-        printf("构建语法失败！%d\n", ecode);
+        std::cout<<"构建语法失败！"<<ecode<<std::endl;
 
     return 0;
 }
@@ -261,7 +261,7 @@ int build_grammar(UserData *udata)
 
     grm_file = fopen(GRM_FILE, "rb");
     if(NULL == grm_file) {
-        printf("打开\"%s\"文件失败！[%s]\n", GRM_FILE, strerror(errno));
+        std::cout<<"打开"<<GRM_FILE<<"文件失败！"<<strerror(errno)<<std::endl;
         return -1;
     }
 
@@ -272,7 +272,7 @@ int build_grammar(UserData *udata)
     grm_content = (char *)malloc(grm_cnt_len + 1);
     if (NULL == grm_content)
     {
-        printf("内存分配失败!\n");
+        std::cout<<"内存分配失败!"<<std::endl;
         fclose(grm_file);
         grm_file = NULL;
         return -1;
@@ -319,7 +319,7 @@ int run_asr(UserData *udata)
     asr_audiof = "/home/liuxin/catkin_ws/devel/lib/mengjia_command/liuxin.wav";
     f_pcm = fopen(asr_audiof, "rb");
     if (NULL == f_pcm) {
-        printf("打开\"%s\"失败！[%s]\n", f_pcm, strerror(errno));
+        std::cout<<"打开"<<f_pcm<<"失败！"<<strerror(errno)<<std::endl;
         goto run_error;
     }
     fseek(f_pcm, 0, SEEK_END);
@@ -346,7 +346,7 @@ int run_asr(UserData *udata)
     session_id = QISRSessionBegin(NULL, asr_params, &errcode);
     if (NULL == session_id)
         goto run_error;
-    printf("开始识别...\n");
+    std::cout<<"开始识别......"<<std::endl;
 
     while (1) {
         unsigned int len = 6400;
@@ -364,7 +364,7 @@ int run_asr(UserData *udata)
         if (len <= 0)
             break;
 
-        printf(">");
+        std::cout<<">"<<std::endl;
         fflush(stdout);
         errcode = QISRAudioWrite(session_id, (const void *)&pcm_data[pcm_count], len, aud_stat, &ep_status, &rec_status);
         if (MSP_SUCCESS != errcode)
@@ -390,18 +390,14 @@ int run_asr(UserData *udata)
         rec_rslt = QISRGetResult(session_id, &rss_status, 0, &errcode);
         usleep(150 * 1000);
     }
-    printf("\n识别结束：\n");
-    printf("=============================================================\n");
+   std::cout<<"识别结束"<<std::endl;
+    std::cout<<"============================================================="<<std::endl;
     if (NULL != rec_rslt)
     {
-        printf("%s\n", rec_rslt);
-        json_object *pobi = NULL,*pobj = NULL;
+        std::cout<<rec_rslt<<std::endl;
+        json_object *pobi = NULL;
         pobi = json_tokener_parse(rec_rslt);
-        printf("%s\n", json_object_get_string(pobi));
-        printf("==============================\n");
-        printf("==============================\n");
-        printf("==============================\n");
-        printf("==============================\n");
+        std::cout<< json_object_get_string(pobi)<<std::endl;
         pobi = json_object_object_get(pobi,"ws");
         int jslength = json_object_array_length(pobi);
         number=jslength;
@@ -413,9 +409,9 @@ int run_asr(UserData *udata)
         for(i=0;i<jslength;i++)
         {
             pobk[i] = json_object_array_get_idx(pobi,i);
-            printf("%s\n", json_object_get_string(pobk[i]));
+            std::cout<< json_object_get_string(pobk[i])<<std::endl;
             pobl[i] = json_object_object_get(pobk[i],"cw");
-            printf("%s\n", json_object_get_string(pobl[i]));
+            std::cout<< json_object_get_string(pobl[i])<<std::endl;
             int jslength1 = json_object_array_length(pobl[i]);
             int j;
             for(j=0;j<jslength1;j++)
@@ -431,8 +427,8 @@ int run_asr(UserData *udata)
         }
     }
     else
-        printf("没有识别结果！\n");
-    printf("=============================================================\n");
+        std::cout<<"没有识别结果！"<<std::endl;
+    std::cout<<"============================================================="<<std::endl;
 
     goto run_exit;
 
@@ -460,52 +456,58 @@ int main(int argc, char **argv)
     int ret                     = 0 ;
 
     snd_pcm_open_setparams(SND_PCM_STREAM_CAPTURE);
-    snd_pcm_capture();
+    //snd_pcm_capture();
 
     ret = MSPLogin(NULL, NULL, login_config); //第一个参数为用户名，第二个参数为密码，传NULL即可，第三个参数是登录参数
     if (MSP_SUCCESS != ret) {
-        printf("登录失败：%d\n", ret);
+        std::cout<<"登录失败："<< ret<<std::endl;
         goto exit;
     }
 
     memset(&asr_data, 0, sizeof(UserData));
-    printf("构建离线识别语法网络...\n");
+    std::cout<<"构建离线识别语法网络..."<<std::endl;
     ret = build_grammar(&asr_data);  //第一次使用某语法进行识别，需要先构建语法网络，获取语法ID，之后使用此语法进行识别，无需再次构建
     if (MSP_SUCCESS != ret) {
-        printf("构建语法调用失败！\n");
+        std::cout<<"构建语法调用失败！"<<std::endl;
         goto exit;
     }
     while (1 != asr_data.build_fini)
         usleep(300 * 1000);
     if (MSP_SUCCESS != asr_data.errcode)
         goto exit;
-    printf("离线识别语法网络构建完成，开始识别...\n");
-    ret = run_asr(&asr_data);
-    if (MSP_SUCCESS != ret) {
-        printf("离线语法识别出错: %d \n", ret);
-        goto exit;
-    }
-    if (ros::ok())
+    std::cout<<"离线识别语法网络构建完成，开始识别..."<<std::endl;
+    while (ros::ok())
     {
-        drv_msgs::target_info message1;
+        snd_pcm_open_setparams(SND_PCM_STREAM_CAPTURE);
+        snd_pcm_capture();
+        ret = run_asr(&asr_data);
+        if (MSP_SUCCESS != ret) {
+            std::cout<<"离线语法识别出错: "<<ret<<std::endl;
+            goto exit;
+        }
+        //drv_msgs::target_info message1;
         for(int mim=0;mim<number;mim++)
         {
             switch (numbers[mim]) {
+            case 1000:
+                //message1.action.data=things[mim];
+                break;
             case 100:
             {
-                message1.object.data=things[mim];
+                //message1.object.data=things[mim];
                 ros::param::set("/comm/target/is_set",true);
                 ros::param::set("/comm/target/label","bottle");
                 break;
             }
-            case 1000:
-                message1.action.data=things[mim];break;
-            case 10:
-                message1.host.data=things[mim];break;
-            case 11:
-                message1.host.data=things[mim];break;
-            case 12:
-                message1.host.data=things[mim];break;
+            case 3:
+                // message1.host.data=things[mim];
+                break;
+            case 2:
+                // message1.host.data=things[mim];
+                break;
+            case 1:
+                //message1.host.data=things[mim];
+                break;
             default:
                 break;
             }
@@ -515,10 +517,11 @@ int main(int argc, char **argv)
         {
             std::cout<<things[mim]<<numbers[mim]<<std::endl;
         }
+        std::cout<<"本次完成，下一次识别等待……"<<std::endl;
     }
 exit:
     MSPLogout();
-    printf("请按任意键退出...\n");
+    std::cout<<"请按任意键退出..."<<std::endl;
     getchar();
     return 0;
 }
