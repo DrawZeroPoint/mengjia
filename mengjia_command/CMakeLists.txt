@@ -19,13 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(ALSA REQUIRED)
-
-add_message_files(DIRECTORY FILES message1.msg)
-
-catkin_package(
-
-)
-
+catkin_package()
 include_directories(
   ./include
   ${catkin_INCLUDE_DIRS}
