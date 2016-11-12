@@ -1,0 +1,9 @@
+﻿#BNF+IAT 1.0 UTF-8;
+!grammar fetch;
+
+!start <start>;
+<start>:[<prep>]<object><action><host>;
+<prep>:把!id(0)|将!id(0);
+<object>:杯子!id(100)|水杯id(100)|水瓶!id(101)|瓶子!id(101);
+<action>:递给!id(1000)|递!id(1000)|拿给!id(1000);
+<host>:我!id(10)|她!id(11)|他!id(12);
