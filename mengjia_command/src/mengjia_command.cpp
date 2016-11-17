@@ -20,6 +20,7 @@
 #define SAMPLE_RATE_16K     (16000)
 #define MAX_GRAMMARID_LEN   (32)
 #define MAX_PARAMS_LEN      (1024)
+#define path1  "/home/liuxin/catkin_ws/devel/lib/mengjia_command/liuxin.wav"
 
 const char * ASR_RES_PATH        = "fo|/home/liuxin/catkin_ws/devel/lib/mengjia_command/msc/common.jet"; //离线语法识别资源路径
 const char * GRM_BUILD_PATH      = "/home/liuxin/catkin_ws/devel/lib/mengjia_command/msc/GrmBuilld"; //构建离线语法识别网络生成数据保存路径
@@ -122,7 +123,7 @@ long convert(char d,char c)
 
 void snd_pcm_capture()
 {
-    FILE *fp = fopen("/home/liuxin/catkin_ws/devel/lib/mengjia_command/liuxin.wav","w");
+    FILE *fp = fopen(path1,"w");
     fwrite(&default_wav_hdr,sizeof(default_wav_hdr),1,fp);
     long o = default_wav_hdr.data_size;
     std::cout<<"请叙述你的问题："<<std::endl;
@@ -316,7 +317,7 @@ int run_asr(UserData *udata)
     int rss_status                     = MSP_REC_STATUS_INCOMPLETE;
     int errcode                        = -1;
 
-    asr_audiof = "/home/liuxin/catkin_ws/devel/lib/mengjia_command/liuxin.wav";
+    asr_audiof = path1;
     f_pcm = fopen(asr_audiof, "rb");
     if (NULL == f_pcm) {
         std::cout<<"打开"<<f_pcm<<"失败！"<<strerror(errno)<<std::endl;

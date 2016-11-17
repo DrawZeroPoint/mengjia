@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <math.h>
-
 #include "include/qtts.h"
 #include "include/qisr.h"
 #include "include/msp_cmn.h"
@@ -16,8 +15,13 @@
 #define	BUFFER_SIZE	4096
 #define FRAME_LEN	640
 #define HINTS_SIZE  100
+#define path1  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/liuxin.wav"
+#define path2  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/Mengjia.wav"
+#define path3  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/liuxin.txt"
+#define path4  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/Mengjia.txt"
+#define path5  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/result.txt"
 
-
+using namespace std;
 int ret = MSP_SUCCESS;
 const char* login_params = "appid = 57cf7a00";
 
@@ -106,7 +110,7 @@ long convert(char d,char c)
 
 void snd_pcm_capture()
 {
-    FILE *fp = fopen("/home/liuxin/catkin_ws/devel/lib/mengjia_chat/liuxin.wav","w");
+    FILE *fp = fopen(path1,"w");
     fwrite(&default_wav_hdr,sizeof(default_wav_hdr),1,fp);
     long o = default_wav_hdr.data_size;
     printf("请叙述你的问题：\n");
@@ -232,7 +236,7 @@ void run_iat(const char* audio_file)
     long	pcm_count=0;
     long	pcm_size=0;
     long	read_size=0;
-    FILE*   result=fopen("/home/liuxin/catkin_ws/devel/lib/mengjia_chat/result.txt","w");
+    FILE*   result=fopen(path5,"w");
     if (NULL == audio_file)
         goto iat_exit;
     f_pcm = fopen(audio_file, "rb");
@@ -361,12 +365,12 @@ iat_exit:
 void text_extraction()
 {
     json_object	*pobj = NULL,*pobi = NULL;
-    pobj = json_object_from_file("/home/liuxin/catkin_ws/devel/lib/mengjia_chat/result.txt");
+    pobj = json_object_from_file(path5);
     pobi = json_object_object_get(json_object_object_get(pobj, "answer"),"text");
     if(pobi==NULL)
     {
         printf("你的问题，我无法回答！\n");
-        FILE* fp=fopen("/home/liuxin/catkin_ws/devel/lib/mengjia_chat/Mengjia.txt","w");
+        FILE* fp=fopen(path4,"w");
         fputs("你的问题，我无法回答！",fp);
         fclose(fp);
         json_object_put(pobi);
@@ -376,7 +380,7 @@ void text_extraction()
     {
         printf("提取的文本为：\n");
         printf("%s\n", json_object_get_string(pobi));
-        json_object_to_file("/home/liuxin/catkin_ws/devel/lib/mengjia_chat/Mengjia.txt", pobi);
+        json_object_to_file(path4, pobi);
         json_object_put(pobi);
         json_object_put(pobj);
     }
@@ -461,7 +465,7 @@ int text_to_speech(const char* src_text, const char* des_path, const char* param
 
 void run_tts()
 {
-    FILE* fp=fopen("/home/liuxin/catkin_ws/devel/lib/mengjia_chat/Mengjia.txt","r");
+    FILE* fp=fopen(path4,"r");
     fseek(fp,0,SEEK_END);
     long length=ftell(fp);
     fseek(fp,0,SEEK_SET);
@@ -477,7 +481,7 @@ void run_tts()
     printf("开始合成 ...\n");
     printf("=============================================================\n");
     char* session_begin_params = "voice_name = xiaoyan, text_encoding = utf8, sample_rate = 16000, speed = 50, volume = 50, pitch = 50, rdn = 2";
-    char* filename= "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/Mengjia.wav";
+    char* filename= path2;
     ret = text_to_speech(text, filename, session_begin_params);
     if (MSP_SUCCESS != ret)
     {
@@ -495,7 +499,7 @@ void snd_pcm_playback()
     char* buffer = (char*)malloc(buffer_size);
     printf("开始回答您的问题：\n");
     printf("=============================================================\n");
-    FILE* fp=fopen("/home/liuxin/catkin_ws/devel/lib/mengjia_chat/Mengjia.wav","rb");
+    FILE* fp=fopen(path2,"rb");
     while(!feof(fp))
     {
         fread(buffer,1,buffer_size,fp);
@@ -517,7 +521,7 @@ int main(int argc, char **argv)
         snd_pcm_open_setparams(SND_PCM_STREAM_CAPTURE);
         snd_pcm_capture();
         snd_pcm_close(handle);
-        run_iat("/home/liuxin/catkin_ws/devel/lib/mengjia_chat/liuxin.wav");
+        run_iat(path1);
         text_extraction();
         run_tts();
         snd_pcm_open_setparams(SND_PCM_STREAM_PLAYBACK);
