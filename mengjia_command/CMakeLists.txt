@@ -26,5 +26,5 @@ include_directories(
 )
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} /usr/lib/libmsc.so /usr/lib/libjson-c.so ${ALSA_LIBRARY})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} /usr/lib/mengjia/libmsc.so /usr/lib/mengjia/libjson-c.so.2.0.2 ${ALSA_LIBRARY})
 

@@ -1,0 +1,11 @@
+<launch>
+
+  <!-- initialize chat service -->
+  <node name="mengjia_chat" pkg="mengjia_chat" type="mengjia_chat" output="screen">
+  </node>
+
+  <!-- initialize user command service -->
+  <node name="mengjia_command" pkg="mengjia_command" type="mengjia_command" output="screen">
+  </node>
+
+</launch>

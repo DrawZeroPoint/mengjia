@@ -15,11 +15,12 @@
 #define	BUFFER_SIZE	4096
 #define FRAME_LEN	640
 #define HINTS_SIZE  100
-#define path1  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/liuxin.wav"
-#define path2  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/Mengjia.wav"
-#define path3  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/liuxin.txt"
-#define path4  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/Mengjia.txt"
-#define path5  "/home/liuxin/catkin_ws/devel/lib/mengjia_chat/result.txt"
+
+#define path1  "/home/aicrobo/catkin_ws/devel/lib/mengjia_chat/liuxin.wav"
+#define path2  "/home/aicrobo/catkin_ws/devel/lib/mengjia_chat/Mengjia.wav"
+#define path3  "/home/aicrobo/catkin_ws/devel/lib/mengjia_chat/liuxin.txt"
+#define path4  "/home/aicrobo/catkin_ws/devel/lib/mengjia_chat/Mengjia.txt"
+#define path5  "/home/aicrobo/catkin_ws/devel/lib/mengjia_chat/result.txt"
 
 using namespace std;
 int ret = MSP_SUCCESS;

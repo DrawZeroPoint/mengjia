@@ -20,11 +20,11 @@
 #define SAMPLE_RATE_16K     (16000)
 #define MAX_GRAMMARID_LEN   (32)
 #define MAX_PARAMS_LEN      (1024)
-#define path1  "/home/liuxin/catkin_ws/devel/lib/mengjia_command/liuxin.wav"
+#define path1  "/home/aicrobo/catkin_ws/devel/lib/mengjia_command/liuxin.wav"
 
-const char * ASR_RES_PATH        = "fo|/home/liuxin/catkin_ws/devel/lib/mengjia_command/msc/common.jet"; //离线语法识别资源路径
-const char * GRM_BUILD_PATH      = "/home/liuxin/catkin_ws/devel/lib/mengjia_command/msc/GrmBuilld"; //构建离线语法识别网络生成数据保存路径
-const char * GRM_FILE            = "/home/liuxin/catkin_ws/devel/lib/mengjia_command/test.bnf"; //构建离线识别语法网络所用的语法文件
+const char * ASR_RES_PATH        = "fo|/home/aicrobo/catkin_ws/devel/lib/mengjia_command/msc/common.jet"; //离线语法识别资源路径
+const char * GRM_BUILD_PATH      = "/home/aicrobo/catkin_ws/devel/lib/mengjia_command/msc/GrmBuilld"; //构建离线语法识别网络生成数据保存路径
+const char * GRM_FILE            = "/home/aicrobo/catkin_ws/devel/lib/mengjia_command/test.bnf"; //构建离线识别语法网络所用的语法文件
 
 typedef struct _wave_pcm_hdr
 {

@@ -12,4 +12,4 @@ catkin_package()
 include_directories(${catkin_INCLUDE_DIRS})
 
 add_executable(mengjia_chat src/mengjia_chat.cpp)
-target_link_libraries(mengjia_chat ${catkin_LIBRARIES} /usr/lib/libmsc.so /usr/lib/libjson-c.so /usr/lib/x86_64-linux-gnu/libasound.so)
+target_link_libraries(mengjia_chat ${catkin_LIBRARIES} /usr/lib/mengjia/libmsc.so /usr/lib/mengjia/libjson-c.so.2.0.2 /usr/lib/mengjia/libasound.so.2.0.0)
