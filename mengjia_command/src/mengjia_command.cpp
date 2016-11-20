@@ -26,6 +26,9 @@ const char * ASR_RES_PATH        = "fo|/home/aicrobo/catkin_ws/devel/lib/mengjia
 const char * GRM_BUILD_PATH      = "/home/aicrobo/catkin_ws/devel/lib/mengjia_command/msc/GrmBuilld"; //构建离线语法识别网络生成数据保存路径
 const char * GRM_FILE            = "/home/aicrobo/catkin_ws/devel/lib/mengjia_command/test.bnf"; //构建离线识别语法网络所用的语法文件
 
+std::string param_target_set =   "/comm/control/target/is_set";
+std::string param_target_label = "/comm/control/target/label";
+
 typedef struct _wave_pcm_hdr
 {
     char		riff[4];
@@ -496,8 +499,8 @@ int main(int argc, char **argv)
             case 100:
             {
                 //message1.object.data=things[mim];
-                ros::param::set("/comm/target/is_set",true);
-                ros::param::set("/comm/target/label","bottle");
+                ros::param::set(param_target_set, true);
+                ros::param::set(param_target_label, "bottle");
                 break;
             }
             case 3:
